@@ -8,16 +8,20 @@ import summerPic from './images/summer.jpg';
 
 const Container = props => {
   const songs = [summer, hey, ukulele];
+  const titles = ['summer', 'hey', 'ukulele'];
   const pics = [summerPic, heyPic, ukulelePic];
-  let songIndex = 0;
+  let songIndex = 2;
   let [audio] = useState(new Audio(songs[songIndex]));
   const [playing, setPlaying] = useState(false);
   const [cover, setCover] = useState(pics[songIndex]);
+  const [title, setTitle] = useState(titles[songIndex]);
 
   const toggle = () => setPlaying(!playing);
+  
 
   useEffect(() => {
     playing ? audio.play() : audio.pause();
+ 
   }, [playing]);
 
   useEffect(() => {
@@ -38,10 +42,11 @@ const Container = props => {
     if (audio.play()) {
       setPlaying(true);
       setCover(pics[songIndex]);
+      setTitle(titles[songIndex])
     }
   };
 
-  const prevSong = () => {
+  const prevSong = (e) => {
     songIndex--;
     console.log(songIndex);
     if (songIndex < 0) {
@@ -52,6 +57,8 @@ const Container = props => {
     if (audio.play()) {
       setPlaying(true);
       setCover(pics[songIndex]);
+      setTitle(titles[songIndex])
+      
     }
   };
 
@@ -59,9 +66,9 @@ const Container = props => {
     <Fragment>
       <h1>Music Player</h1>
 
-      <div className='music-container '>
+      <div className={playing? 'music-container play' : 'music-container'}>
         <div className='music-info'>
-          <h4 className='title'>ukulele</h4>
+          <h4 className='title'>{title}</h4>
           <div className='progress-container'>
             <div className='progress'></div>
           </div>
