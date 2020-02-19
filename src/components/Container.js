@@ -26,16 +26,30 @@ const Container = props => {
   }, []);
 
   const nextSong = () => {
-    songIndex++
-    console.log(songIndex)
+    songIndex++;
+    console.log(songIndex);
     if (songIndex > songs.length - 1) {
       songIndex = 0;
     }
     audio.src = songs[songIndex];
     audio.play();
-   
-  
 
+    if (audio.play()){
+      setPlaying(true)
+    }
+  };
+
+  const prevSong = () => {
+    songIndex--;
+    console.log(songIndex);
+    if (songIndex < 0) {
+      songIndex = songs.length - 1;
+    }
+    audio.src = songs[songIndex];
+    audio.play();
+    if (audio.play()){
+      setPlaying(true)
+    }
   };
 
   return (
@@ -54,7 +68,7 @@ const Container = props => {
           <img src={ukulelePic} alt='music-cover' id='cover' />
         </div>
         <div className='navigation'>
-          <button id='prev' className='action-btn'>
+          <button id='prev' className='action-btn' onClick={prevSong}>
             <i className='fas fa-backward'></i>
           </button>
 
