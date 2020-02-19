@@ -25,22 +25,22 @@ const loadSong = song => {
 //load song details into DOM
 loadSong(songs[songIndex]);
 
-//play the song
-const playSong = () => {
-  musicContainer.classList.add('play');
-  playBtn.querySelector('i.fas').classList.remove('fa-play');
-  playBtn.querySelector('i.fas').classList.add('fa-pause');
-  audio.play();
-};
+// //play the song
+// const playSong = () => {
+//   musicContainer.classList.add('play');
+//   playBtn.querySelector('i.fas').classList.remove('fa-play');
+//   playBtn.querySelector('i.fas').classList.add('fa-pause');
+//   audio.play();
+// };
 
 //pause song
 
-const pauseSong = () => {
-  musicContainer.classList.remove('play');
-  playBtn.querySelector('i.fas').classList.remove('fa-pause');
-  playBtn.querySelector('i.fas').classList.add('fa-play');
-  audio.pause();
-};
+// const pauseSong = () => {
+//   musicContainer.classList.remove('play');
+//   playBtn.querySelector('i.fas').classList.remove('fa-pause');
+//   playBtn.querySelector('i.fas').classList.add('fa-play');
+//   audio.pause();
+// };
 
 //previous song
 const prevSong = () => {

@@ -7,7 +7,9 @@ import heyPic from './images/hey.jpg';
 import summerPic from './images/summer.jpg';
 
 const Container = props => {
-  const [audio] = useState(new Audio(ukulele));
+  const songs = [summer, hey, ukulele];
+  let songIndex = 1;
+  let [audio] = useState(new Audio(songs[songIndex]));
   const [playing, setPlaying] = useState(false);
 
   const toggle = () => setPlaying(!playing);
@@ -23,6 +25,19 @@ const Container = props => {
     };
   }, []);
 
+  const nextSong = () => {
+    songIndex++
+    console.log(songIndex)
+    if (songIndex > songs.length - 1) {
+      songIndex = 0;
+    }
+    audio.src = songs[songIndex];
+    audio.play();
+   
+  
+
+  };
+
   return (
     <Fragment>
       <h1>Music Player</h1>
@@ -33,9 +48,6 @@ const Container = props => {
           <div className='progress-container'>
             <div className='progress'></div>
           </div>
-        </div>
-        <div>
-          <audio src={summer} id='audio'></audio>
         </div>
 
         <div className='img-container'>
@@ -51,9 +63,13 @@ const Container = props => {
             className='action-btn action-btn-big'
             onClick={toggle}
           >
-            {playing ? <i className='fas fa-pause'></i> : <i className='fas fa-play'></i>}
+            {playing ? (
+              <i className='fas fa-pause'></i>
+            ) : (
+              <i className='fas fa-play'></i>
+            )}
           </button>
-          <button id='next' className='action-btn'>
+          <button id='next' className='action-btn' onClick={nextSong}>
             <i className='fas fa-forward'></i>
           </button>
         </div>
