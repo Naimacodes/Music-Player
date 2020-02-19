@@ -8,9 +8,11 @@ import summerPic from './images/summer.jpg';
 
 const Container = props => {
   const songs = [summer, hey, ukulele];
-  let songIndex = 1;
+  const pics = [summerPic, heyPic, ukulelePic];
+  let songIndex = 0;
   let [audio] = useState(new Audio(songs[songIndex]));
   const [playing, setPlaying] = useState(false);
+  const [cover, setCover] = useState(pics[songIndex]);
 
   const toggle = () => setPlaying(!playing);
 
@@ -33,9 +35,9 @@ const Container = props => {
     }
     audio.src = songs[songIndex];
     audio.play();
-
-    if (audio.play()){
-      setPlaying(true)
+    if (audio.play()) {
+      setPlaying(true);
+      setCover(pics[songIndex]);
     }
   };
 
@@ -47,8 +49,9 @@ const Container = props => {
     }
     audio.src = songs[songIndex];
     audio.play();
-    if (audio.play()){
-      setPlaying(true)
+    if (audio.play()) {
+      setPlaying(true);
+      setCover(pics[songIndex]);
     }
   };
 
@@ -65,7 +68,7 @@ const Container = props => {
         </div>
 
         <div className='img-container'>
-          <img src={ukulelePic} alt='music-cover' id='cover' />
+          <img src={cover} alt='music-cover' id='cover' />
         </div>
         <div className='navigation'>
           <button id='prev' className='action-btn' onClick={prevSong}>
