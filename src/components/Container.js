@@ -1,4 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, {
+  Fragment,
+  useState,
+  useRef,
+  useLayoutEffect,
+  useEffect
+} from 'react';
 import hey from './music/hey.mp3';
 import ukulele from './music/ukulele.mp3';
 import summer from './music/summer.mp3';
@@ -10,18 +16,21 @@ const Container = props => {
   const songs = [summer, hey, ukulele];
   const titles = ['summer', 'hey', 'ukulele'];
   const pics = [summerPic, heyPic, ukulelePic];
-  let songIndex = 2;
+  const targetRef = useRef();
+
+  let songIndex = 0;
+  const [dimensions, setDimensions] = useState({ width: 0 });
   let [audio] = useState(new Audio(songs[songIndex]));
   const [playing, setPlaying] = useState(false);
   const [cover, setCover] = useState(pics[songIndex]);
   const [title, setTitle] = useState(titles[songIndex]);
+  const [progress, setProgress] = useState(false)
+  
 
   const toggle = () => setPlaying(!playing);
-  
 
   useEffect(() => {
     playing ? audio.play() : audio.pause();
- 
   }, [playing]);
 
   useEffect(() => {
@@ -30,6 +39,28 @@ const Container = props => {
       audio.removeEventListener('ended', () => setPlaying(false));
     };
   }, []);
+
+
+  useLayoutEffect(() => {
+    if (targetRef.current) {
+      setDimensions({
+        width: targetRef.current.offsetWidth,
+        height: targetRef.current.offsetHeight
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    audio.addEventListener('timeupdate', () => {let width = dimensions.width;
+      console.log(width)
+    const { duration, currentTime } = audio.src;
+    //calculate the played percentage of the song.
+    const progressPercent = (currentTime / duration) * 100;
+
+    width = `${progressPercent}%`;
+    setProgress(true)});
+  });
+
 
   const nextSong = () => {
     songIndex++;
@@ -42,11 +73,11 @@ const Container = props => {
     if (audio.play()) {
       setPlaying(true);
       setCover(pics[songIndex]);
-      setTitle(titles[songIndex])
+      setTitle(titles[songIndex]);
     }
   };
 
-  const prevSong = (e) => {
+  const prevSong = e => {
     songIndex--;
     console.log(songIndex);
     if (songIndex < 0) {
@@ -57,22 +88,30 @@ const Container = props => {
     if (audio.play()) {
       setPlaying(true);
       setCover(pics[songIndex]);
-      setTitle(titles[songIndex])
-      
+      setTitle(titles[songIndex]);
     }
   };
 
+
+
   return (
     <Fragment>
-      <h1>Music Player</h1>
+      <h1 style={{ textAlign: 'center' }}>Music Player</h1>
 
-      <div className={playing? 'music-container play' : 'music-container'}>
+      <div className={playing ? 'music-container play' : 'music-container'}>
         <div className='music-info'>
           <h4 className='title'>{title}</h4>
           <div className='progress-container'>
-            <div className='progress'></div>
+            {/* onClick={setProgress} */}
+            <div
+              className='progress'
+              ref={targetRef}
+              
+            ></div>
           </div>
         </div>
+
+
 
         <div className='img-container'>
           <img src={cover} alt='music-cover' id='cover' />
