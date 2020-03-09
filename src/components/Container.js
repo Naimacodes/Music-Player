@@ -2,9 +2,10 @@ import React, {
   Fragment,
   useState,
   useRef,
-  useLayoutEffect,
-  useEffect
+  useEffect,
+  useCallback
 } from 'react';
+
 import nickdrake from './music/nick-drake-riverman.mp3';
 import ryanashley from './music/toni-braxton-he-wasnt-man-enough-by-ryan-ashley-cover.mp3';
 import holyoysters from './music/holy-oysters-take-me-for-a-ride-official.mp3';
@@ -22,16 +23,24 @@ const Container = props => {
   const pics = [holyoysterspic, heyPic, nickdrakepic];
   const targetRef = useRef();
 
-  // let songIndex = 2;
   const [songIndex, setSongIndex] = useState(0);
-  const [dimensions, setDimensions] = useState({ width: 0 });
   let [audio] = useState(new Audio(songs[songIndex]));
   const [playing, setPlaying] = useState(false);
   const [cover, setCover] = useState(pics[songIndex]);
   const [title, setTitle] = useState(titles[songIndex]);
   const [progress, setProgress] = useState(false);
+  const [progressWidth, setProgressWidth] = useState(0);
 
+  //toggle play pause
   const toggle = () => setPlaying(!playing);
+
+  //update progress bar
+  const updateProgress = useCallback(() => {
+    const { duration, currentTime } = audio;
+    //calculate the played percentage of the song.
+    const progressPercent = (currentTime / duration) * 100;
+    setProgressWidth(`${progressPercent}`);
+  }, []);
 
   useEffect(() => {
     playing ? audio.play() : audio.pause();
@@ -39,30 +48,13 @@ const Container = props => {
 
   useEffect(() => {
     audio.addEventListener('ended', () => setPlaying(false));
+    audio.addEventListener('timeupdate', () => updateProgress());
     return () => {
       audio.removeEventListener('ended', () => setPlaying(false));
     };
-  }, []);
+  }, [audio, updateProgress]);
 
-  useLayoutEffect(() => {
-    if (targetRef.current) {
-      setDimensions({
-        width: targetRef.current.offsetWidth,
-        height: targetRef.current.offsetHeight
-      });
-    }
-  }, []);
-
-  // useEffect(() => {
-  //   audio.addEventListener('timeupdate', () => {let width = dimensions.width;
-
-  //   const { duration, currentTime } = audio.src;
-  //   //calculate the played percentage of the song.
-  //   const progressPercent = (currentTime / duration) * 100;
-
-  //   width = `${progressPercent}%`;
-  //   setProgress(true)});
-  // });
+  //////play next song
   if (songIndex > songs.length - 1) {
     setSongIndex(0);
   }
@@ -78,6 +70,8 @@ const Container = props => {
       setTitle(titles[songIndex]);
     }
   };
+
+  //////play previous song
 
   if (songIndex < 0) {
     setSongIndex(songs.length - 1);
@@ -105,7 +99,11 @@ const Container = props => {
           <h4 className='title'>{title}</h4>
           <div className='progress-container'>
             {/* onClick={setProgress} */}
-            <div className='progress' ref={targetRef}></div>
+            <div
+              className='progress'
+              style={{ width: `${progressWidth}%` }}
+              ref={targetRef}
+            ></div>
           </div>
         </div>
 
