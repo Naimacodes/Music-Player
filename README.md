@@ -1,6 +1,6 @@
 # Music Player
 
-Created a nice UI to play music stored in the "music folder" using the HTML5 audio API
+Created a custom music player using the HTML5 audio API and Reactjs
 
 ## Preview
 
@@ -16,3 +16,4 @@ Created a nice UI to play music stored in the "music folder" using the HTML5 aud
 ## Used technologies
 React JS
 CSS
+
