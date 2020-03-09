@@ -3,6 +3,7 @@ import React, {
   useState,
   useRef,
   useEffect,
+  useLayoutEffect,
   useCallback
 } from 'react';
 
@@ -28,7 +29,8 @@ const Container = props => {
   const [playing, setPlaying] = useState(false);
   const [cover, setCover] = useState(pics[songIndex]);
   const [title, setTitle] = useState(titles[songIndex]);
-  const [progress, setProgress] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 0 });
+
   const [progressWidth, setProgressWidth] = useState(0);
 
   //toggle play pause
@@ -41,6 +43,25 @@ const Container = props => {
     const progressPercent = (currentTime / duration) * 100;
     setProgressWidth(`${progressPercent}`);
   }, []);
+
+  useLayoutEffect(() => {
+    if (targetRef.current) {
+      setDimensions({
+        width: targetRef.current.offsetWidth
+        // height: targetRef.current.offsetHeight
+      });
+    }
+  }, []);
+
+  const setProgress = e => {
+    const width = dimensions.width;
+
+    const clickX = e.nativeEvent.offsetX;
+    console.log(width);
+    console.log(clickX);
+    const duration = audio.duration;
+    audio.currentTime = (clickX / width) * duration;
+  };
 
   useEffect(() => {
     playing ? audio.play() : audio.pause();
@@ -97,8 +118,11 @@ const Container = props => {
       <div className={playing ? 'music-container play' : 'music-container'}>
         <div className='music-info'>
           <h4 className='title'>{title}</h4>
-          <div className='progress-container'>
-            {/* onClick={setProgress} */}
+          <div
+            className='progress-container'
+            ref={targetRef}
+            onClick={setProgress}
+          >
             <div
               className='progress'
               style={{ width: `${progressWidth}%` }}
