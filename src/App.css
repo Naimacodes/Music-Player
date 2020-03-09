@@ -8,7 +8,7 @@ body {
   background-image: linear-gradient(
     0deg,
     rgb(229, 237, 247) 23.8%,
-    rgb(100, 150, 206) 92%
+    rgb(206, 100, 132) 92%
   );
   height: 100vh;
   display: flex;

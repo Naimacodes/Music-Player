@@ -5,27 +5,31 @@ import React, {
   useLayoutEffect,
   useEffect
 } from 'react';
-import hey from './music/hey.mp3';
-import ukulele from './music/ukulele.mp3';
-import summer from './music/summer.mp3';
-import ukulelePic from './images/ukulele.jpg';
-import heyPic from './images/hey.jpg';
-import summerPic from './images/summer.jpg';
+import nickdrake from './music/nick-drake-riverman.mp3';
+import ryanashley from './music/toni-braxton-he-wasnt-man-enough-by-ryan-ashley-cover.mp3';
+import holyoysters from './music/holy-oysters-take-me-for-a-ride-official.mp3';
+import nickdrakepic from './images/nickdrakepic.jpg';
+import heyPic from './images/ryanashleypic.png';
+import holyoysterspic from './images/holyoysterspic.jpg';
 
 const Container = props => {
-  const songs = [summer, hey, ukulele];
-  const titles = ['summer', 'hey', 'ukulele'];
-  const pics = [summerPic, heyPic, ukulelePic];
+  const songs = [holyoysters, ryanashley, nickdrake];
+  const titles = [
+    'Take me for a ride - Holy Oysters',
+    'HWME - Ryan Ashley',
+    'Riverman - Nick Drake'
+  ];
+  const pics = [holyoysterspic, heyPic, nickdrakepic];
   const targetRef = useRef();
 
-  let songIndex = 0;
+  // let songIndex = 2;
+  const [songIndex, setSongIndex] = useState(0);
   const [dimensions, setDimensions] = useState({ width: 0 });
   let [audio] = useState(new Audio(songs[songIndex]));
   const [playing, setPlaying] = useState(false);
   const [cover, setCover] = useState(pics[songIndex]);
   const [title, setTitle] = useState(titles[songIndex]);
-  const [progress, setProgress] = useState(false)
-  
+  const [progress, setProgress] = useState(false);
 
   const toggle = () => setPlaying(!playing);
 
@@ -40,7 +44,6 @@ const Container = props => {
     };
   }, []);
 
-
   useLayoutEffect(() => {
     if (targetRef.current) {
       setDimensions({
@@ -50,24 +53,23 @@ const Container = props => {
     }
   }, []);
 
-  useEffect(() => {
-    audio.addEventListener('timeupdate', () => {let width = dimensions.width;
-      console.log(width)
-    const { duration, currentTime } = audio.src;
-    //calculate the played percentage of the song.
-    const progressPercent = (currentTime / duration) * 100;
+  // useEffect(() => {
+  //   audio.addEventListener('timeupdate', () => {let width = dimensions.width;
 
-    width = `${progressPercent}%`;
-    setProgress(true)});
-  });
+  //   const { duration, currentTime } = audio.src;
+  //   //calculate the played percentage of the song.
+  //   const progressPercent = (currentTime / duration) * 100;
 
+  //   width = `${progressPercent}%`;
+  //   setProgress(true)});
+  // });
+  if (songIndex > songs.length - 1) {
+    setSongIndex(0);
+  }
 
   const nextSong = () => {
-    songIndex++;
+    setSongIndex(prevsongIndex => prevsongIndex + 1);
     console.log(songIndex);
-    if (songIndex > songs.length - 1) {
-      songIndex = 0;
-    }
     audio.src = songs[songIndex];
     audio.play();
     if (audio.play()) {
@@ -77,13 +79,15 @@ const Container = props => {
     }
   };
 
+  if (songIndex < 0) {
+    setSongIndex(songs.length - 1);
+  }
   const prevSong = e => {
-    songIndex--;
+    setSongIndex(prevsongIndex => prevsongIndex - 1);
+
     console.log(songIndex);
-    if (songIndex < 0) {
-      songIndex = songs.length - 1;
-    }
     audio.src = songs[songIndex];
+
     audio.play();
     if (audio.play()) {
       setPlaying(true);
@@ -91,8 +95,6 @@ const Container = props => {
       setTitle(titles[songIndex]);
     }
   };
-
-
 
   return (
     <Fragment>
@@ -103,15 +105,9 @@ const Container = props => {
           <h4 className='title'>{title}</h4>
           <div className='progress-container'>
             {/* onClick={setProgress} */}
-            <div
-              className='progress'
-              ref={targetRef}
-              
-            ></div>
+            <div className='progress' ref={targetRef}></div>
           </div>
         </div>
-
-
 
         <div className='img-container'>
           <img src={cover} alt='music-cover' id='cover' />
