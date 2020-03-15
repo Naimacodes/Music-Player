@@ -30,7 +30,6 @@ const Container = props => {
   const [cover, setCover] = useState(pics[songIndex]);
   const [title, setTitle] = useState(titles[songIndex]);
   const [dimensions, setDimensions] = useState({ width: 0 });
-
   const [progressWidth, setProgressWidth] = useState(0);
 
   //toggle play pause
@@ -44,6 +43,9 @@ const Container = props => {
     setProgressWidth(`${progressPercent}`);
   }, []);
 
+
+
+//To find out the width of my progress container
   useLayoutEffect(() => {
     if (targetRef.current) {
       setDimensions({
@@ -53,15 +55,23 @@ const Container = props => {
     }
   }, []);
 
+
+
+
+
+  //make the progress bar drawable
   const setProgress = e => {
     const width = dimensions.width;
 
     const clickX = e.nativeEvent.offsetX;
-    console.log(width);
-    console.log(clickX);
+
     const duration = audio.duration;
     audio.currentTime = (clickX / width) * duration;
   };
+
+
+
+
 
   useEffect(() => {
     playing ? audio.play() : audio.pause();
@@ -75,6 +85,12 @@ const Container = props => {
     };
   }, [audio, updateProgress]);
 
+
+
+
+
+
+
   //////play next song
   if (songIndex > songs.length - 1) {
     setSongIndex(0);
@@ -82,7 +98,7 @@ const Container = props => {
 
   const nextSong = () => {
     setSongIndex(prevsongIndex => prevsongIndex + 1);
-    console.log(songIndex);
+
     audio.src = songs[songIndex];
     audio.play();
     if (audio.play()) {
@@ -92,6 +108,11 @@ const Container = props => {
     }
   };
 
+
+
+
+
+
   //////play previous song
 
   if (songIndex < 0) {
@@ -99,10 +120,7 @@ const Container = props => {
   }
   const prevSong = e => {
     setSongIndex(prevsongIndex => prevsongIndex - 1);
-
-    console.log(songIndex);
     audio.src = songs[songIndex];
-
     audio.play();
     if (audio.play()) {
       setPlaying(true);
